@@ -292,12 +292,47 @@
             text-align: center;
             font-size: 2.2rem;
             letter-spacing: 5px;
-            margin-bottom: 50px;
+            margin-bottom: 30px; 
             color: #ffffff;
             font-weight: 400;
             text-transform: uppercase;
         }
 
+        /* --- ZOEKBALK --- */
+        .search-container {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        #searchInput {
+            width: 80%;
+            max-width: 400px;
+            padding: 12px 25px;
+            font-family: 'Cinzel', serif;
+            font-size: 1rem;
+            color: #ffffff;
+            background: rgba(20, 8, 30, 0.6);
+            border: 1px solid rgba(199, 125, 255, 0.3);
+            border-radius: 25px;
+            outline: none;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+
+        #searchInput::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+        }
+
+        #searchInput:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 15px rgba(199, 125, 255, 0.3);
+            background: rgba(20, 8, 30, 0.9);
+        }
+
+        /* --- PRODUCT GRID --- */
         .grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -310,7 +345,7 @@
             border-radius: 4px;
             display: flex;
             flex-direction: column;
-            justify-content: flex-start; /* Zorgt dat de foto mooi bovenaan blijft */
+            justify-content: flex-start;
             align-items: center;
             font-family: 'Cinzel', serif;
             letter-spacing: 2px;
@@ -321,22 +356,51 @@
             padding: 20px; 
             text-align: center;
             height: 100%;
+            position: relative;
+            overflow: hidden;
         }
         
-        /* De stijl voor jouw productfoto's */
-        .product-image {
+        /* SHIMMER EFFECT */
+        .product-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(to right, transparent, rgba(255,255,255,0.08), transparent);
+            transform: skewX(-25deg);
+            transition: 0.75s;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .product-card:hover::before { left: 125%; }
+
+        .img-container {
             width: 100%;
             height: 250px;
-            object-fit: cover; /* Zorgt dat je foto niet uitrekt */
             border-radius: 4px;
+            overflow: hidden;
             margin-bottom: 20px;
-            background-color: #1a0b26; /* Donkere kleur voor als foto nog laadt */
+            background-color: #1a0b26;
         }
+
+        .product-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; 
+            transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .product-card:hover .product-image { transform: scale(1.1); }
 
         .product-title {
             margin-bottom: 15px;
             font-weight: 600;
             font-size: 1.2rem;
+            position: relative;
+            z-index: 2;
         }
 
         .product-price {
@@ -344,6 +408,8 @@
             font-size: 1.1rem;
             margin-bottom: 25px;
             letter-spacing: 1px;
+            position: relative;
+            z-index: 2;
         }
         
         .buy-button {
@@ -358,7 +424,9 @@
             cursor: pointer;
             transition: all 0.3s;
             text-decoration: none;
-            margin-top: auto; /* Duwt knop altijd mooi naar beneden */
+            margin-top: auto; 
+            position: relative;
+            z-index: 2;
         }
         
         .buy-button:hover {
@@ -370,7 +438,45 @@
             transform: translateY(-5px);
             box-shadow: 0 15px 30px rgba(199, 125, 255, 0.15);
             border: 1px solid rgba(199, 125, 255, 0.5);
-            color: #ffffff;
+        }
+
+        /* --- MOBIELE WEERGAVE (2 PRODUCTEN NAAST ELKAAR) --- */
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: repeat(2, 1fr); 
+                gap: 15px; 
+            }
+            .product-card {
+                padding: 10px; 
+                height: auto; 
+            }
+            .img-container {
+                height: 160px; 
+                margin-bottom: 10px;
+            }
+            .product-title {
+                font-size: 0.85rem; 
+                margin-bottom: 5px;
+                letter-spacing: 1px;
+            }
+            .product-price {
+                font-size: 0.9rem;
+                margin-bottom: 15px;
+            }
+            .buy-button {
+                padding: 8px 10px;
+                font-size: 0.7rem;
+                width: 100%; 
+            }
+            .products {
+                padding: 50px 20px; 
+            }
+            #searchInput {
+                width: 90%; 
+            }
+            .hero h1 {
+                font-size: 2.5rem; 
+            }
         }
     </style>
 </head>
@@ -412,45 +518,63 @@
 
     <section id="shop" class="products">
         <h2>Collectie</h2>
-        <div class="grid">
+        
+        <!-- ZOEKBALK -->
+        <div class="search-container">
+            <input type="text" id="searchInput" onkeyup="filterProducts()" placeholder="Zoek een product...">
+        </div>
+
+        <div class="grid" id="productGrid">
             
             <div class="product-card">
-                <img src="https://i.postimg.cc/VvMfH8Vs/IMG-E0905.avif" alt="Product Foto" class="product-image">
+                <div class="img-container">
+                    <img src="https://i.postimg.cc/VvMfH8Vs/IMG-E0905.avif" alt="Product Foto" class="product-image">
+                </div>
                 <div class="product-title">Goyard Grey slingbag</div>
                 <div class="product-price">€ 39,95</div>
                 <a href="#" class="buy-button">Details</a>
             </div>
             
             <div class="product-card">
-                <img src="https://i.postimg.cc/WpKqWph1/IMG-E0909.avif" alt="Product Foto" class="product-image">
+                <div class="img-container">
+                    <img src="https://i.postimg.cc/WpKqWph1/IMG-E0909.avif" alt="Product Foto" class="product-image">
+                </div>
                 <div class="product-title">Louis Vuitton blue flame bag</div>
                 <div class="product-price">€ 39,95</div>
                 <a href="#" class="buy-button">Details</a>
             </div>
             
             <div class="product-card">
-                <img src="https://i.postimg.cc/tJC0FHHg/IMG-E0912.avif" class="product-image">
-                <div class="product-title">Goyard Green/Grey cardholder </div>
+                <div class="img-container">
+                    <img src="https://i.postimg.cc/tJC0FHHg/IMG-E0912.avif" class="product-image">
+                </div>
+                <div class="product-title">Goyard Green/Grey cardholder</div>
                 <div class="product-price">€ 19,95</div>
                 <a href="#" class="buy-button">Details</a>
             </div>
             
             <div class="product-card">
-                <img src="https://i.postimg.cc/Tw3Q92hC/IMG-0910.jpg" class="product-image">
+                <div class="img-container">
+                    <img src="https://i.postimg.cc/Tw3Q92hC/IMG-0910.jpg" class="product-image">
+                </div>
                 <div class="product-title">Dior Silver 925 chain</div>
                 <div class="product-price">€ 19,95</div>
                 <a href="#" class="buy-button">Details</a>
             </div>
             
             <div class="product-card">
-                <img src="https://i.postimg.cc/sxVcXjCJ/IMG-E0914.avif" class="product-image">
+                <div class="img-container">
+                    <img src="https://i.postimg.cc/sxVcXjCJ/IMG-E0914.avif" class="product-image">
+                </div>
                 <div class="product-title">Louis Vuitton black belt 110cm</div>
                 <div class="product-price">€ 24,95</div>
                 <a href="#" class="buy-button">Details</a>
             </div>
             
             <div class="product-card">
-                <img src="https://i.postimg.cc/vmrf6Jzj/IMG-E0915.avif" alt="Product Foto" class="product-image">
+                <div class="img-container">
+                    <img src="https://i.postimg.cc/vmrf6Jzj/IMG-E0915.avif" alt="Product Foto" class="product-image">
+                </div>
                 <div class="product-title">Louis Vuitton brown belt 110cm</div>
                 <div class="product-price">€ 24,95</div>
                 <a href="#" class="buy-button">Details</a>
@@ -480,6 +604,21 @@
         function closeModal(e) {
             if (e.target === modal) {
                 toggleModalForce();
+            }
+        }
+
+        // Live zoekfilter functie
+        function filterProducts() {
+            let input = document.getElementById('searchInput').value.toLowerCase();
+            let cards = document.getElementsByClassName('product-card');
+
+            for (let i = 0; i < cards.length; i++) {
+                let title = cards[i].getElementsByClassName('product-title')[0].innerText.toLowerCase();
+                if (title.includes(input)) {
+                    cards[i].style.display = "flex"; 
+                } else {
+                    cards[i].style.display = "none"; 
+                }
             }
         }
     </script>
