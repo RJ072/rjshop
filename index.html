@@ -18,12 +18,16 @@
             box-sizing: border-box;
         }
 
-        body, html {
+        /* Gesplitst om iPhone scroll bugs te voorkomen */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
             font-family: 'Playfair Display', serif;
             background-color: #08020b;
             color: #ece4f2;
             overflow-x: hidden;
-            scroll-behavior: smooth;
             -webkit-tap-highlight-color: transparent; /* Verwijdert de blauwe klik-gloed op iPhones */
         }
 
@@ -155,7 +159,7 @@
             font-size: 0.8rem; width: 22px; height: 22px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-weight: bold; border: 2px solid #08020b;
         }
 
-        /* --- WINKELMAND OVERLAY & SIDEBAR MENU (LUXE UPDATE) --- */
+        /* --- WINKELMAND OVERLAY & SIDEBAR MENU --- */
         #cartOverlay {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(5px);
@@ -225,17 +229,14 @@
 </head>
 <body>
 
-    <!-- PRELOADER -->
     <div id="preloader">
         <div class="preloader-logo">RJ</div>
     </div>
 
-    <!-- ZWEVENDE WINKELMAND KNOP -->
     <div id="cartIcon" onclick="toggleCart()">
         🛒 <span id="cartCount">0</span>
     </div>
 
-    <!-- WINKELMAND OVERLAY & SIDEBAR -->
     <div id="cartOverlay" onclick="toggleCart()"></div>
     <div id="cartSidebar">
         <div class="cart-header">
@@ -243,8 +244,7 @@
             <span class="close-cart" onclick="toggleCart()">✕</span>
         </div>
         <div id="cartItems">
-            <!-- Items komen hier -->
-        </div>
+            </div>
         <div class="cart-footer">
             <div class="cart-total"><span>Totaal:</span> <span id="cartTotalPrice">€ 0,00</span></div>
             <button class="btn-checkout" onclick="checkoutOrder()">Bestel via Snap</button>
@@ -371,7 +371,7 @@
             document.documentElement.style.setProperty('--mouse-y', e.clientY + 'px');
         });
 
-        // 3. SCROLL FADE & FLOAT (Geoptimaliseerd voor mobiel)
+        // 3. SCROLL FADE & FLOAT (Geoptimaliseerd)
         document.addEventListener("DOMContentLoaded", () => {
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
@@ -381,38 +381,32 @@
                 });
             }, { 
                 threshold: 0.05, 
-                rootMargin: "0px 0px -20px 0px" // Trigger animatie iets eerder op mobiel
+                rootMargin: "0px 0px -20px 0px"
             });
 
-            // 4. 3D TILT EFFECT (Muis & IPHONE TOUCH)
+            // 4. 3D TILT EFFECT (UITGESCHAKELD VOOR TOUCHSCREENS OM SCROLL BUGS TE VOORKOMEN)
             const tiltCards = document.querySelectorAll('.product-card');
             tiltCards.forEach(card => {
-                observer.observe(card); // Voeg toe aan scroll animatie
+                observer.observe(card); 
                 
-                // Voor Desktop (Muis)
+                // Alleen uitvoeren op computers met muis
                 card.addEventListener('mousemove', e => {
+                    if (window.innerWidth <= 768) return; // Beveiliging voor telefoons
                     let rect = card.getBoundingClientRect();
                     let x = e.clientX - rect.left;
                     let y = e.clientY - rect.top;
                     applyTilt(card, x, y, rect.width, rect.height);
                 });
-                card.addEventListener('mouseleave', () => resetTilt(card));
-
-                // Voor iPhone / Mobiel (Touch)
-                card.addEventListener('touchmove', e => {
-                    let rect = card.getBoundingClientRect();
-                    let touch = e.touches[0];
-                    let x = touch.clientX - rect.left;
-                    let y = touch.clientY - rect.top;
-                    applyTilt(card, x, y, rect.width, rect.height);
+                
+                card.addEventListener('mouseleave', () => {
+                    if (window.innerWidth <= 768) return;
+                    resetTilt(card);
                 });
-                card.addEventListener('touchend', () => resetTilt(card));
             });
 
             function applyTilt(card, x, y, width, height) {
-                // Begrens de touch-waardes zodat de kaart niet te agressief flipt op kleine schermen
-                let xPct = Math.max(-0.5, Math.min(0.5, (x / width - 0.5))) * 15; 
-                let yPct = Math.max(-0.5, Math.min(0.5, (y / height - 0.5))) * -15;
+                let xPct = (x / width - 0.5) * 15; 
+                let yPct = (y / height - 0.5) * -15;
                 
                 card.style.transition = 'none';
                 card.style.transform = `perspective(1000px) rotateY(${xPct}deg) rotateX(${yPct}deg) scale3d(1.02, 1.02, 1.02)`;
@@ -452,7 +446,6 @@
             document.getElementById('cartSidebar').classList.toggle('active');
             document.getElementById('cartOverlay').classList.toggle('active');
             
-            // Verberg scrollbar van hoofdpagina als mandje open is
             if(document.getElementById('cartSidebar').classList.contains('active')) {
                 document.body.style.overflow = 'hidden';
             } else {
