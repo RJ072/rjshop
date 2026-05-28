@@ -26,6 +26,55 @@
             scroll-behavior: smooth;
         }
 
+        /* --- CUSTOM SCROLLBAR --- */
+        ::-webkit-scrollbar {
+            width: 8px; /* Maakt hem lekker dun */
+        }
+        ::-webkit-scrollbar-track {
+            background: #08020b; /* Zelfde kleur als je achtergrond */
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(199, 125, 255, 0.4); /* Subtiel paars */
+            border-radius: 10px; /* Ronde uiteindes */
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(199, 125, 255, 0.8); /* Licht op als je eroverheen gaat */
+        }
+
+        /* --- PRELOADER (LAADSCHERM) --- */
+        #preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: #050108; /* Iets donkerder dan je gewone site */
+            z-index: 9999; /* Blijft boven ALLES staan */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.8s ease-out, visibility 0.8s ease-out;
+        }
+        
+        #preloader.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .preloader-logo {
+            font-family: 'Great Vibes', cursive;
+            font-size: 6rem;
+            color: transparent;
+            -webkit-text-stroke: 2px #d09cf5;
+            text-shadow: 0 0 20px #c77dff, 0 0 40px #9d4edd;
+            animation: pulse-glow 1.5s infinite alternate ease-in-out;
+        }
+
+        @keyframes pulse-glow {
+            0% { transform: scale(0.9); opacity: 0.7; text-shadow: 0 0 10px #c77dff; }
+            100% { transform: scale(1.1); opacity: 1; text-shadow: 0 0 30px #c77dff, 0 0 60px #9d4edd; }
+        }
+
         /* --- DE INTERACTIEVE SPOTLIGHT --- */
         .spotlight {
             position: fixed;
@@ -482,6 +531,10 @@
 </head>
 <body>
 
+    <div id="preloader">
+        <div class="preloader-logo">RJ</div>
+    </div>
+
     <div class="spotlight"></div>
 
     <div class="watermark-container">
@@ -519,7 +572,6 @@
     <section id="shop" class="products">
         <h2>Collectie</h2>
         
-        <!-- ZOEKBALK -->
         <div class="search-container">
             <input type="text" id="searchInput" onkeyup="filterProducts()" placeholder="Zoek een product...">
         </div>
@@ -584,6 +636,13 @@
     </section>
 
     <script>
+        // Verwijder preloader na het laden (1.2 seconden voor het luxe effect)
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                document.getElementById('preloader').classList.add('hidden');
+            }, 1200); 
+        });
+
         document.addEventListener('mousemove', function(e) {
             document.documentElement.style.setProperty('--mouse-x', e.clientX + 'px');
             document.documentElement.style.setProperty('--mouse-y', e.clientY + 'px');
