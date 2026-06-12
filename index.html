@@ -468,8 +468,7 @@
             document.getElementById('productGrid').innerHTML = '<p style="text-align: center; width: 100%; color: red; position: relative; z-index: 10;">Fout bij ophalen. Check of je Google Sheet is gepubliceerd.</p>';
         });
 
-        // 3D EFFECT FUNCTIES
-        function tiltCard(e, card) {
+       function tiltCard(e, card) {
             const rect = card.getBoundingClientRect();
             const x = e.clientX - rect.left;
             const y = e.clientY - rect.top;
