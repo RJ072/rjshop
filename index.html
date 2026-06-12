@@ -82,13 +82,34 @@
         .logo-text {
             font-family: 'Great Vibes', cursive; font-size: 35vw; line-height: 1.4; 
             padding: 10vw 15vw; margin: -10vw -15vw; letter-spacing: -3vw; 
-            -webkit-text-stroke: 3px #d09cf5; 
-            background: linear-gradient(115deg, transparent 45%, rgba(255,255,255,0.9) 50%, transparent 55%), conic-gradient(from 45deg at 50% 50%, rgba(255,255,255,0.9) 0deg, rgba(200,210,220,0.3) 45deg, rgba(255,255,255,0.8) 90deg, rgba(180,195,210,0.5) 135deg, rgba(255,255,255,0.9) 180deg, rgba(200,210,220,0.3) 225deg, rgba(255,255,255,0.8) 270deg, rgba(180,195,210,0.5) 315deg), conic-gradient(from 15deg at 25% 25%, #ffffff 0deg, #c4d4db 90deg, #ffffff 180deg, #8ba8b5 270deg), linear-gradient(135deg, #e0eff2 0%, #ffffff 30%, #b8ced1 50%, #ffffff 70%, #e0eff2 100%);
-            background-size: 200% 100%, 14px 14px, 22px 22px, 100% 100%; background-position: -200% 0, 0 0, 0 0, 0 0; 
-            -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent;
-            animation: occasional-reflection 8s infinite ease-in-out;
+            
+            /* Liquid Chrome / Platinum Effect */
+            background: linear-gradient(
+                110deg, 
+                #1a1a1a 0%, 
+                #4d4d4d 25%, 
+                #ffffff 45%, 
+                #ffffff 55%, 
+                #4d4d4d 75%, 
+                #1a1a1a 100%
+            );
+            background-size: 250% auto;
+            -webkit-background-clip: text; 
+            background-clip: text; 
+            -webkit-text-fill-color: transparent; 
+            color: transparent;
+            
+            /* Subtiele paarse gloed op de randjes voor diepte */
+            -webkit-text-stroke: 2px rgba(199, 125, 255, 0.4);
+            
+            /* De vloeiende lichtflits */
+            animation: liquid-chrome 7s infinite linear;
         }
-        @keyframes occasional-reflection { 0%, 80% { background-position: -200% 0, 0 0, 0 0, 0 0; } 90% { background-position: 200% 0, 0 0, 0 0, 0 0; } 100% { background-position: 200% 0, 0 0, 0 0, 0 0; } }
+
+        @keyframes liquid-chrome { 
+            0% { background-position: 250% center; } 
+            100% { background-position: -250% center; } 
+        }
 
         /* HERO & SHOP */
         .hero { height: 100vh; width: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; position: relative; z-index: 10; }
