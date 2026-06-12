@@ -399,9 +399,14 @@
             setTimeout(() => document.getElementById('preloader').classList.add('hidden'), 800); 
         });
 
-        document.addEventListener('mousemove', function(e) {
-            document.documentElement.style.setProperty('--mouse-x', e.clientX + 'px');
-            document.documentElement.style.setProperty('--mouse-y', e.clientY + 'px');
+      /* HARDWARE ACCELERATED SPOTLIGHT FIX ⚡ */
+        .spotlight {
+            position: fixed; top: 0; left: 0; width: 800px; height: 800px;
+            margin-top: -400px; margin-left: -400px;
+            pointer-events: none; z-index: 0;
+            background: radial-gradient(circle, rgba(176, 82, 255, 0.15) 0%, rgba(74, 20, 140, 0.05) 40%, transparent 70%);
+            transform: translate3d(-1000px, -1000px, 0);
+            will-change: transform;
         });
 
         const tsvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ1zpe-KcRZkdhq4_v-whSgAheKi6VWQMOgfKPgsj1IRXfBQ6MVzWcroxtCymYRRy5FULKcUbYMaTfX/pub?output=tsv";
